@@ -258,12 +258,16 @@ document.getElementById('format-video').addEventListener('click', function() {
     state.format = 'video';
     document.getElementById('format-video').classList.add('selected');
     document.getElementById('format-image').classList.remove('selected');
+    document.getElementById('duration').disabled = false;
+    document.getElementById('duration').parentElement.style.opacity = '1';
 });
 
 document.getElementById('format-image').addEventListener('click', function() {
     state.format = 'image';
     document.getElementById('format-image').classList.add('selected');
     document.getElementById('format-video').classList.remove('selected');
+    document.getElementById('duration').disabled = true;
+    document.getElementById('duration').parentElement.style.opacity = '0.5';
 });
 
 document.getElementById('tool-select').addEventListener('change', function() {
