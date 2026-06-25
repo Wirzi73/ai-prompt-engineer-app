@@ -151,15 +151,9 @@ function generateVideoPrompt(input, config, duration, mood, colors) {
 
     prompt += `CONSTRAINTS & REALISM:\n`;
     prompt += `${config.constraints}\n`;
-    prompt += `Keine Morphing-Artefakte, natürliche Physik, konsistente Beleuchtung.\n\n`;
+    prompt += `Keine Morphing-Artefakte, natürliche Physik, konsistente Beleuchtung.\n`;
 
-    prompt += `DURATION: ${duration || 10} Sekunden optimal\n`;
-    prompt += `RESOLUTION: 4K+, 24fps cinematic feel\n`;
-
-    prompt += `\`\`\`\n\n`;
-
-    prompt += `### 🎯 TOOL-SPEZIFISCH:\n`;
-    prompt += `**${config.name}:** ${config.instruction}\n`;
+    prompt += `\`\`\`\n`;
 
     return prompt;
 }
@@ -196,10 +190,7 @@ function generateImagePrompt(input, config, mood, colors) {
     prompt += `CONSTRAINTS:\n`;
     prompt += `${config.constraints}\n`;
 
-    prompt += `\`\`\`\n\n`;
-
-    prompt += `### 🎯 TOOL-SPEZIFISCH:\n`;
-    prompt += `**${config.name}:** ${config.instruction}\n`;
+    prompt += `\`\`\`\n`;
 
     return prompt;
 }
