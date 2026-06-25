@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt Engineer - Cinematic Video & Image Prompts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tool-card {
+            @apply p-4 rounded-lg cursor-pointer transition-all duration-300 border-2 border-transparent;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .tool-card:hover {
+            @apply border-cyan-400 bg-opacity-10;
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .tool-card.selected {
+            @apply border-cyan-400 ring-2 ring-cyan-400 ring-opacity-50;
+            background: rgba(0, 212, 255, 0.15);
+        }
+
+        .prompt-output {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .copy-btn {
+            @apply bg-cyan-500 hover:bg-cyan-600 text-black font-bold py-2 px-4 rounded transition-all;
+        }
+
+        .advanced-toggle {
+            @apply text-cyan-400 hover:text-cyan-300 cursor-pointer font-semibold;
+        }
+
+        /* Scrollbar Styling */
+        .prompt-output::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .prompt-output::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .prompt-output::-webkit-scrollbar-thumb {
+            background: rgba(0, 212, 255, 0.5);
+            border-radius: 4px;
+        }
+
+        .prompt-output::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 212, 255, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl sm:text-5xl font-bold mb-4">
+                    <span class="gradient-text">AI Prompt Engineer</span>
+                </h1>
+                <p class="text-gray-300 text-lg">Verwandle deine Ideen in professionelle cineastische Prompts</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Left: Input Section -->
+                <div class="glass-effect rounded-2xl p-8">
+                    <h2 class="text-2xl font-bold mb-6">Deine Anfrage</h2>
+
+                    <!-- Format Selection -->
+                    <div class="mb-8">
+                        <label class="block text-sm font-semibold mb-4">Format</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button id="format-video" class="tool-card selected" data-format="video">
+                                <div class="text-2xl mb-2">🎬</div>
+                                <div class="font-semibold">Video</div>
+                            </button>
+                            <button id="format-image" class="tool-card" data-format="image">
+                                <div class="text-2xl mb-2">🖼️</div>
+                                <div class="font-semibold">Bild</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tool Selection -->
+                    <div class="mb-8">
+                        <label class="block text-sm font-semibold mb-4">KI-Tool</label>
+                        <select id="tool-select" class="w-full bg-gray-800 text-white border border-cyan-500 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cyan-400">
+                            <option value="">-- Wähle ein Tool --</option>
+                            <optgroup label="Video-Tools">
+                                <option value="sora2">Sora 2</option>
+                                <option value="runway">Runway Gen-3</option>
+                                <option value="kling">Kling 3.0</option>
+                                <option value="luma">Luma Dream Machine</option>
+                                <option value="pika">Pika Labs</option>
+                                <option value="google-flow">Google Flow</option>
+                                <option value="google-omni">Google Omni</option>
+                            </optgroup>
+                            <optgroup label="Bild-Tools">
+                                <option value="midjourney">Midjourney</option>
+                                <option value="flux">Flux</option>
+                                <option value="stable">Stable Diffusion</option>
+                                <option value="dalle3">DALL-E 3</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <!-- Main Prompt Input -->
+                    <div class="mb-8">
+                        <label class="block text-sm font-semibold mb-3">Deine Idee / Beschreibung</label>
+                        <textarea id="user-input" class="w-full bg-gray-800 text-white border border-cyan-500 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-cyan-400 min-h-[120px] resize-none" placeholder="z.B. Ein Surfer paddelt bei Sonnenaufgang ins Meer. Cineastisch, Omni-optimiert..."></textarea>
+                    </div>
+
+                    <!-- Advanced Settings Toggle -->
+                    <div class="mb-6 pb-6 border-b border-gray-700">
+                        <button id="toggle-advanced" class="advanced-toggle flex items-center gap-2">
+                            <span id="toggle-icon">▶</span>
+                            Advanced Settings
+                        </button>
+                    </div>
+
+                    <!-- Advanced Settings (Hidden by Default) -->
+                    <div id="advanced-section" class="hidden space-y-6 mb-8">
+                        <!-- Duration -->
+                        <div>
+                            <label class="block text-sm font-semibold mb-2">Dauer (Sekunden)</label>
+                            <input type="number" id="duration" class="w-full bg-gray-800 text-white border border-cyan-500 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cyan-400" placeholder="z.B. 15" min="1" max="120">
+                        </div>
+
+                        <!-- Variants -->
+                        <div>
+                            <label class="block text-sm font-semibold mb-2">Varianten</label>
+                            <div class="flex gap-2">
+                                <button class="variant-btn px-4 py-2 bg-gray-800 border border-cyan-500 rounded-lg hover:bg-gray-700 transition" data-variants="0">Nur 1</button>
+                                <button class="variant-btn px-4 py-2 bg-gray-800 border border-cyan-500 rounded-lg hover:bg-gray-700 transition selected" data-variants="1">+ 1 Variante</button>
+                                <button class="variant-btn px-4 py-2 bg-gray-800 border border-cyan-500 rounded-lg hover:bg-gray-700 transition" data-variants="2">+ 2 Varianten</button>
+                            </div>
+                        </div>
+
+                        <!-- Style/Mood -->
+                        <div>
+                            <label class="block text-sm font-semibold mb-2">Stil / Stimmung</label>
+                            <input type="text" id="mood" class="w-full bg-gray-800 text-white border border-cyan-500 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cyan-400" placeholder="z.B. cineastisch, Nike-Ad Style, dokumentarisch...">
+                        </div>
+
+                        <!-- Color Palette -->
+                        <div>
+                            <label class="block text-sm font-semibold mb-2">Farbpalette</label>
+                            <input type="text" id="colors" class="w-full bg-gray-800 text-white border border-cyan-500 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cyan-400" placeholder="z.B. warm gold + cool cyan, dunkle Neons...">
+                        </div>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <button id="generate-btn" class="w-full copy-btn text-lg py-3 font-bold">
+                        🚀 Prompt Generieren
+                    </button>
+                </div>
+
+                <!-- Right: Output Section -->
+                <div class="glass-effect rounded-2xl p-8">
+                    <h2 class="text-2xl font-bold mb-6">Dein Prompt</h2>
+
+                    <div id="output-container" class="hidden space-y-4">
+                        <!-- Tool Info -->
+                        <div class="bg-cyan-900 bg-opacity-30 border border-cyan-500 rounded-lg p-4">
+                            <p class="text-sm text-cyan-300"><strong>Tool:</strong> <span id="output-tool"></span></p>
+                            <p class="text-sm text-cyan-300"><strong>Format:</strong> <span id="output-format"></span></p>
+                        </div>
+
+                        <!-- Prompt Output -->
+                        <div>
+                            <label class="block text-sm font-semibold mb-2">📋 Haupt-Prompt</label>
+                            <div id="prompt-main" class="prompt-output"></div>
+                        </div>
+
+                        <!-- Variant Output (if selected) -->
+                        <div id="variant-output-container" class="hidden">
+                            <label class="block text-sm font-semibold mb-2">💡 Varianten</label>
+                            <div id="prompt-variants" class="space-y-3"></div>
+                        </div>
+
+                        <!-- Copy Button -->
+                        <button id="copy-btn" class="copy-btn w-full text-lg py-3 font-bold">
+                            📋 Ganzer Prompt kopieren
+                        </button>
+
+                        <!-- Info -->
+                        <div class="bg-gray-800 bg-opacity-50 rounded-lg p-4 text-sm text-gray-300">
+                            <p>✨ <strong>Pro-Tipp:</strong> Kopiere den Prompt direkt in dein KI-Tool und generiere! Perfekt für Sora, Runway, Kling, Midjourney und mehr.</p>
+                        </div>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="empty-state" class="text-center py-12">
+                        <div class="text-6xl mb-4">🎯</div>
+                        <p class="text-gray-400">Fülle das Formular aus und klicke auf "Prompt Generieren"</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="text-center mt-12 text-gray-400 text-sm">
+                <p>💡 Gebaut mit AI Prompt Engineer Framework | Alle Prompts werden lokal generiert</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
