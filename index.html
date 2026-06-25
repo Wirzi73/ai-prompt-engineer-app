@@ -5,21 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Prompt Engineer - Cinematic Video & Image Prompts</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;900&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        accent: '#eb7733',
+                        deepBlue: '#004a72',
+                        sand: '#dfccc0',
+                        soulBlack: '#0a0a0a',
+                        cardGray: '#121212'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        horizon: ['Syncopate', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
         body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            background-color: #0a0a0a;
             color: #fff;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
         }
 
         .glass-effect {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .gradient-text {
-            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+            background: linear-gradient(135deg, #eb7733 0%, #dfccc0 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -27,22 +52,22 @@
 
         .tool-card {
             @apply p-4 rounded-lg cursor-pointer transition-all duration-300 border-2 border-transparent;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(235, 119, 51, 0.05);
         }
 
         .tool-card:hover {
-            @apply border-cyan-400 bg-opacity-10;
-            background: rgba(0, 212, 255, 0.1);
+            @apply border-accent;
+            background: rgba(235, 119, 51, 0.15);
         }
 
         .tool-card.selected {
-            @apply border-cyan-400 ring-2 ring-cyan-400 ring-opacity-50;
-            background: rgba(0, 212, 255, 0.15);
+            @apply border-accent ring-2 ring-accent ring-opacity-30;
+            background: rgba(235, 119, 51, 0.2);
         }
 
         .prompt-output {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(0, 212, 255, 0.3);
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(235, 119, 51, 0.2);
             border-radius: 8px;
             padding: 20px;
             font-family: 'Monaco', 'Courier New', monospace;
@@ -53,11 +78,17 @@
         }
 
         .copy-btn {
-            @apply bg-cyan-500 hover:bg-cyan-600 text-black font-bold py-2 px-4 rounded transition-all;
+            @apply bg-accent hover:bg-orange-600 text-white font-bold py-2 px-4 rounded transition-all;
         }
 
         .advanced-toggle {
-            @apply text-cyan-400 hover:text-cyan-300 cursor-pointer font-semibold;
+            @apply text-accent hover:text-orange-400 cursor-pointer font-semibold;
+        }
+
+        .font-horizon {
+            font-family: 'Syncopate', sans-serif;
+            font-weight: 700;
+            letter-spacing: 0.15em;
         }
 
         /* Scrollbar Styling */
@@ -71,12 +102,12 @@
         }
 
         .prompt-output::-webkit-scrollbar-thumb {
-            background: rgba(0, 212, 255, 0.5);
+            background: rgba(235, 119, 51, 0.5);
             border-radius: 4px;
         }
 
         .prompt-output::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 212, 255, 0.7);
+            background: rgba(235, 119, 51, 0.8);
         }
     </style>
 </head>
@@ -114,7 +145,7 @@
                     <!-- Tool Selection -->
                     <div class="mb-8">
                         <label class="block text-sm font-semibold mb-4">KI-Tool</label>
-                        <select id="tool-select" class="w-full bg-gray-800 text-white border border-cyan-500 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cyan-400">
+                        <select id="tool-select" class="w-full bg-cardGray text-white border border-accent rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-accent">
                             <option value="">-- Wähle ein Tool --</option>
                             <optgroup label="Video-Tools">
                                 <option value="sora2">Sora 2</option>
@@ -137,7 +168,7 @@
                     <!-- Main Prompt Input -->
                     <div class="mb-8">
                         <label class="block text-sm font-semibold mb-3">Deine Idee / Beschreibung</label>
-                        <textarea id="user-input" class="w-full bg-gray-800 text-white border border-cyan-500 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-cyan-400 min-h-[120px] resize-none" placeholder="z.B. Ein Surfer paddelt bei Sonnenaufgang ins Meer. Cineastisch, Omni-optimiert..."></textarea>
+                        <textarea id="user-input" class="w-full bg-cardGray text-white border border-accent rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-accent min-h-[120px] resize-none" placeholder="z.B. Ein Surfer paddelt bei Sonnenaufgang ins Meer. Cineastisch, Omni-optimiert..."></textarea>
                     </div>
 
                     <!-- Advanced Settings Toggle -->
@@ -153,29 +184,29 @@
                         <!-- Duration -->
                         <div>
                             <label class="block text-sm font-semibold mb-2">Dauer (Sekunden)</label>
-                            <input type="number" id="duration" class="w-full bg-gray-800 text-white border border-cyan-500 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cyan-400" placeholder="z.B. 15" min="1" max="120">
+                            <input type="number" id="duration" class="w-full bg-cardGray text-white border border-accent rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-accent" placeholder="z.B. 15" min="1" max="120">
                         </div>
 
                         <!-- Variants -->
                         <div>
                             <label class="block text-sm font-semibold mb-2">Varianten</label>
                             <div class="flex gap-2">
-                                <button class="variant-btn px-4 py-2 bg-gray-800 border border-cyan-500 rounded-lg hover:bg-gray-700 transition" data-variants="0">Nur 1</button>
-                                <button class="variant-btn px-4 py-2 bg-gray-800 border border-cyan-500 rounded-lg hover:bg-gray-700 transition selected" data-variants="1">+ 1 Variante</button>
-                                <button class="variant-btn px-4 py-2 bg-gray-800 border border-cyan-500 rounded-lg hover:bg-gray-700 transition" data-variants="2">+ 2 Varianten</button>
+                                <button class="variant-btn px-4 py-2 bg-cardGray border border-accent rounded-lg hover:bg-accent hover:text-soulBlack transition" data-variants="0">Nur 1</button>
+                                <button class="variant-btn px-4 py-2 bg-cardGray border border-accent rounded-lg hover:bg-accent hover:text-soulBlack transition selected" data-variants="1">+ 1 Variante</button>
+                                <button class="variant-btn px-4 py-2 bg-cardGray border border-accent rounded-lg hover:bg-accent hover:text-soulBlack transition" data-variants="2">+ 2 Varianten</button>
                             </div>
                         </div>
 
                         <!-- Style/Mood -->
                         <div>
                             <label class="block text-sm font-semibold mb-2">Stil / Stimmung</label>
-                            <input type="text" id="mood" class="w-full bg-gray-800 text-white border border-cyan-500 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cyan-400" placeholder="z.B. cineastisch, Nike-Ad Style, dokumentarisch...">
+                            <input type="text" id="mood" class="w-full bg-cardGray text-white border border-accent rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-accent" placeholder="z.B. cineastisch, Nike-Ad Style, dokumentarisch...">
                         </div>
 
                         <!-- Color Palette -->
                         <div>
                             <label class="block text-sm font-semibold mb-2">Farbpalette</label>
-                            <input type="text" id="colors" class="w-full bg-gray-800 text-white border border-cyan-500 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cyan-400" placeholder="z.B. warm gold + cool cyan, dunkle Neons...">
+                            <input type="text" id="colors" class="w-full bg-cardGray text-white border border-accent rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-accent" placeholder="z.B. warm gold + cool cyan, dunkle Neons...">
                         </div>
                     </div>
 
@@ -191,9 +222,9 @@
 
                     <div id="output-container" class="hidden space-y-4">
                         <!-- Tool Info -->
-                        <div class="bg-cyan-900 bg-opacity-30 border border-cyan-500 rounded-lg p-4">
-                            <p class="text-sm text-cyan-300"><strong>Tool:</strong> <span id="output-tool"></span></p>
-                            <p class="text-sm text-cyan-300"><strong>Format:</strong> <span id="output-format"></span></p>
+                        <div class="bg-accent bg-opacity-10 border border-accent border-opacity-30 rounded-lg p-4">
+                            <p class="text-sm text-accent text-opacity-90"><strong>Tool:</strong> <span id="output-tool"></span></p>
+                            <p class="text-sm text-accent text-opacity-90"><strong>Format:</strong> <span id="output-format"></span></p>
                         </div>
 
                         <!-- Prompt Output -->
@@ -214,7 +245,7 @@
                         </button>
 
                         <!-- Info -->
-                        <div class="bg-gray-800 bg-opacity-50 rounded-lg p-4 text-sm text-gray-300">
+                        <div class="bg-cardGray bg-opacity-50 rounded-lg p-4 text-sm text-white text-opacity-70">
                             <p>✨ <strong>Pro-Tipp:</strong> Kopiere den Prompt direkt in dein KI-Tool und generiere! Perfekt für Sora, Runway, Kling, Midjourney und mehr.</p>
                         </div>
                     </div>
@@ -228,7 +259,7 @@
             </div>
 
             <!-- Footer -->
-            <div class="text-center mt-12 text-gray-400 text-sm">
+            <div class="text-center mt-12 text-white text-opacity-40 text-sm">
                 <p>💡 Gebaut mit AI Prompt Engineer Framework | Alle Prompts werden lokal generiert</p>
             </div>
         </div>
